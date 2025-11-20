@@ -55,7 +55,7 @@ def test_input():
     from ExtractorVisitor import ExtractorVisitor
     
     # input = 'show me the meeting on 20/12/2025'
-    # input = 'show weather Thanh pho Ho Chi Minh'
+    # input = 'show weather Thanh pho Ho Chi Minh'  -- hiện chỉ test calendar thoi nha
     # set meeting 06:00 07:00 18/11/2025
     input = 'set meeting at 3:00 pm on 30/12/2024'
     pre_processed = pre_processing(input)
