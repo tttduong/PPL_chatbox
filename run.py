@@ -1,4 +1,4 @@
-# python gen.py
+# python run.py
 import sys, os
 import subprocess
 from antlr4 import *
