@@ -8,4 +8,4 @@ python -m venv venv
 venv\Scripts\activate.bat
 pip install -r requirements.txt
 
-python ui.py
+python main.py
