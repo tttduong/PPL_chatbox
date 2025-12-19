@@ -165,3 +165,149 @@ class Calendar(Module):
     
 
 
+# from module.Module import Module
+# import json as js
+# from data_manager import data_manager
+            
+# class Calendar(Module):
+#     def __init__(self, list, response):
+#         self.responseObject = response
+#         super().__init__(list)
+#         self.data_response = data_manager.get_response_templates()
+
+#     def take_action(self):
+#         if self.list['verbs'] == 'show':
+#             pass
+#         elif self.list['verbs'] == 'set':
+#             pass
+#         else:
+#             print('invalid')
+#         return 
+    
+#     def return_response(self):
+#         response = ""
+#         data_response = self.data_response
+        
+#         if self.list.get("location"):
+#             if self.responseObject.isContinue:
+#                 self.responseObject.isContinue = False
+#                 response = data_response['wrong_input']['retry_process']
+#             else:
+#                 response = data_response["wrong_input"]["missing_object"]
+                
+#         # ============ EVENT/MEETING ============
+#         elif self.list['objects'] in ['event', 'meeting'] and self.responseObject.isContinue == False:
+#             # --- SHOW ---
+#             if self.list['verbs'] == 'show' and self.list.get('date'):
+#                 activities = self.get_activities_for_date(self.list['date'])
+                
+#                 # ✅ FIX: Kiểm tra list rỗng thay vì string 'No_date'
+#                 if not activities:
+#                     response = data_response['calendar']['no_activity'].format(
+#                         objects=self.list['objects'], 
+#                         date=self.list['date']
+#                     )
+#                 else:
+#                     # Filter theo type (meeting hoặc event)
+#                     filtered = [
+#                         f"You have {activity['type']}: \"{activity['description']}\", "
+#                         f"start at {activity.get('start_time', 'N/A')} and "
+#                         f"end at {activity.get('end_time', 'N/A')}." 
+#                         for activity in activities 
+#                         if activity['type'] == self.list['objects']
+#                     ]
+                    
+#                     if filtered:
+#                         response = "\n".join(filtered)
+#                     else:
+#                         response = data_response['calendar']['no_activity'].format(
+#                             objects=self.list['objects'], 
+#                             date=self.list['date']
+#                         )
+            
+#             # --- SET ---
+#             elif self.list['verbs'] == 'set' and self.list.get('date'):
+#                 # ✅ FIX: Không cần check activities nữa vì MongoDB tự động xử lý
+                
+#                 # Kiểm tra start_time
+#                 if not self.list.get('start_time'):
+#                     response = data_response['wrong_input']['wrong_time']
+#                 elif not self.responseObject.isContinue:
+#                     response = data_response['calendar']['add_title']
+#                     self.responseObject.isContinue = True
+            
+#             # --- MISSING DATE ---
+#             else:
+#                 response = data_response['wrong_input']["missing_date"]
+
+#         # ============ CALENDAR ============
+#         elif self.list['objects'] == 'calendar':
+#             # --- SHOW ---
+#             if self.list['verbs'] == 'show' and self.list.get('date'):
+#                 activities = self.get_activities_for_date(self.list['date'])
+                
+#                 # ✅ FIX: Kiểm tra list rỗng
+#                 if not activities:
+#                     response = data_response['calendar']['no_activity'].format(
+#                         objects='activity', 
+#                         date=self.list['date']
+#                     )
+#                 else:
+#                     response = "\n".join([
+#                         f"You have {activity['type']}: \"{activity['description']}\", "
+#                         f"start at {activity.get('start_time', 'N/A')} and "
+#                         f"end at {activity.get('end_time', 'N/A')}." 
+#                         for activity in activities
+#                     ])
+            
+#             # --- SET (INVALID) ---
+#             elif self.list['verbs'] == 'set':
+#                 response = data_response['wrong_input']['missing_object']
+            
+#             # --- MISSING DATE ---
+#             else:
+#                 response = data_response['wrong_input']["missing_date"]
+                
+#         # ============ ADD TITLE ============
+#         elif self.list.get('title'):
+#             self.responseObject.isContinue = False
+#             data_temp = data_manager.get_temp_data() 
+            
+#             event_data = {
+#                 "date": data_temp['date'],
+#                 "type": data_temp['objects'],
+#                 "description": self.list['title'],
+#                 "start_time": data_temp['start_time'],
+#                 "end_time": data_temp.get('end_time'),
+#                 "location": data_temp.get('location') 
+#             }
+            
+#             event_id = data_manager.save_calendar_event(event_data)
+            
+#             if event_id:
+#                 response = data_response['calendar']['finish_set'].format(
+#                     objects=data_temp['objects'], 
+#                     title=self.list['title'], 
+#                     date=data_temp['date']
+#                 )
+#             else:
+#                 response = "Error: Failed to save event to MongoDB."
+        
+#         # ============ DEFAULT ============
+#         else:
+#             if self.responseObject.isContinue:
+#                 self.responseObject.isContinue = False
+#                 response = data_response['wrong_input']['retry_process']
+#             else:
+#                 response = data_response["wrong_input"]["missing_object"]
+
+#         return response
+    
+#     def get_activities_for_date(self, date): 
+#         """
+#         ✅ Lấy các hoạt động cho một ngày từ MongoDB.
+#         Luôn trả về list (có thể rỗng).
+#         """
+#         filters = {"date": date}
+#         events = data_manager.get_calendar_events(filters=filters)
+#         return events if events else []

@@ -1,6 +1,8 @@
 from CompiledFiles.ChatGrammarParser import ChatGrammarParser
 from CompiledFiles.ChatGrammarVisitor import ChatGrammarVisitor
 from datetime import datetime
+from data_manager import data_manager  # ✅ IMPORT MongoDB manager
+
 class ExtractorVisitor(ChatGrammarVisitor):
     def __init__(self):
         self.result = {}
@@ -9,7 +11,8 @@ class ExtractorVisitor(ChatGrammarVisitor):
         if ctx.verbs():
             self.result["verbs"] = ctx.verbs().getText()
         if ctx.objects():
-            if ctx.objects().getText() not in ["calendar", "meeting", "event", "weather", "pomodoro"]:
+            #LIST OBJECTS
+            if ctx.objects().getText() not in ["calendar", "meeting", "event", "weather", "pomodoro"]:          
                 self.result["objects"] = "invalid_input"
             else:
                 self.result["objects"] = ctx.objects().getText()
@@ -19,13 +22,31 @@ class ExtractorVisitor(ChatGrammarVisitor):
             self.result["location"] = self.visit(ctx.location())
         if ctx.query():
             self.result["query"] = self.visit(ctx.query())
+        
+        # ✅ FIX: Đọc từ MongoDB thay vì file JSON
         if ctx.TITLE_STRING():
-            import json as js
-            objects = js.load(open("data/Data_temp.json"))['objects']
             title = ctx.TITLE_STRING().getText()
-            print(title)
             self.result["title"] = title.replace("\"", "").strip()
-            self.result["objects"] = objects
+            
+            # ✅ Đọc temp data từ MongoDB
+            try:
+                data_temp = data_manager.get_temp_data()
+                
+                if data_temp and 'objects' in data_temp:
+                    self.result["objects"] = data_temp['objects']
+                else:
+                    # Fallback: Thử đọc từ file nếu MongoDB fail
+                    print("⚠️ No temp data in MongoDB, trying file fallback...")
+                    try:
+                        import json as js
+                        data_temp = js.load(open("data/Data_temp.json"))
+                        self.result["objects"] = data_temp['objects']
+                    except FileNotFoundError:
+                        print("❌ No temp data found in MongoDB or file!")
+                        self.result["objects"] = "invalid_input"
+            except Exception as e:
+                print(f"❌ Error reading temp data: {e}")
+                self.result["objects"] = "invalid_input"
         
         return self.result
 
@@ -48,18 +69,18 @@ class ExtractorVisitor(ChatGrammarVisitor):
     def visitStart_time(self, ctx: ChatGrammarParser.Start_timeContext):
         hour = int(ctx.INT(0).getText())
         minute = int(ctx.INT(1).getText())
-        if (minute >= 60) :
+        if minute >= 60:
             minute = 'invalid_input'
-        if hour >= 25 :
+        if hour >= 25:
             hour = 'invalid_input'
         return f"{hour:02d}:{minute:02d}"
     
     def visitEnd_time(self, ctx: ChatGrammarParser.End_timeContext):
         hour = int(ctx.INT(0).getText())
         minute = int(ctx.INT(1).getText())
-        if (minute >= 60) :
+        if minute >= 60:
             minute = 'invalid_input'
-        if hour >= 25 :
+        if hour >= 25:
             hour = 'invalid_input'
         return f"{hour:02d}:{minute:02d}"
         

@@ -9,3 +9,6 @@ venv\Scripts\activate.bat
 pip install -r requirements.txt
 
 python main.py
+
+/*Example command for chat*/
+show calendar 18/11/2025 
