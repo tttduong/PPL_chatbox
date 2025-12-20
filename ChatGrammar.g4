@@ -20,7 +20,10 @@ duration: INT;
 
 objects: STRING;
 
-verbs: ('set' | 'show' | 'check'| 'tell' | 'start' | 'reset');
+verbs: ('set' | 
+        'show' | 'check'| 'tell' | 
+        'start' | 'reset' | 
+        'complete' | 'finish' | 'done');
 
 location: STRING+;
 

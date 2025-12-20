@@ -180,5 +180,96 @@ class DataManager:
         except Exception as e:
             print(f"❌ Failed to clear temp data: {e}")
 
+    #RELATED COMPLETION TASK FUNCTION
+    def complete_calendar_event(self, event_filter):
+        """
+        Đánh dấu event là completed
+        
+        Args:
+            event_filter: dict chứa filter để tìm event
+                        Ví dụ: {'date': '20/12/2025', 'type': 'meeting'}
+                        hoặc: {'description': 'Team standup'}
+        
+        Returns:
+            int: Số lượng events đã complete
+        """
+        try:
+            collection = self.db[self.collections['calendar']]
+            
+            # Update event với completed flag
+            result = collection.update_many(
+                event_filter,
+                {
+                    '$set': {
+                        'completed': True,
+                        'completed_at': datetime.now()
+                    }
+                }
+            )
+            
+            print(f"✅ Marked {result.modified_count} event(s) as completed")
+            return result.modified_count
+        except Exception as e:
+            print(f"❌ Failed to complete event: {e}")
+            return 0
+
+    def get_incomplete_events(self, filters=None):
+        """
+        Lấy danh sách events chưa complete
+        
+        Args:
+            filters: dict chứa filter bổ sung (date, type, etc.)
+        
+        Returns:
+            list: Danh sách events chưa complete
+        """
+        try:
+            collection = self.db[self.collections['calendar']]
+            
+            # Base query: chỉ lấy event chưa complete
+            query = {'completed': {'$ne': True}}
+            
+            # Thêm filters nếu có
+            if filters:
+                query.update(filters)
+            
+            events = list(collection.find(query).sort('created_at', -1))
+            
+            # Remove MongoDB _id
+            for event in events:
+                event.pop('_id', None)
+            
+            return events
+        except Exception as e:
+            print(f"❌ Failed to get incomplete events: {e}")
+            return []
+
+    def uncomplete_calendar_event(self, event_filter):
+        """
+        Đánh dấu event là chưa hoàn thành (undo complete)
+        
+        Args:
+            event_filter: dict chứa filter để tìm event
+        
+        Returns:
+            int: Số lượng events đã uncomplete
+        """
+        try:
+            collection = self.db[self.collections['calendar']]
+            
+            result = collection.update_many(
+                event_filter,
+                {
+                    '$set': {'completed': False},
+                    '$unset': {'completed_at': ''}
+                }
+            )
+            
+            print(f"✅ Unmarked {result.modified_count} event(s) as incomplete")
+            return result.modified_count
+        except Exception as e:
+            print(f"❌ Failed to uncomplete event: {e}")
+            return 0
+
 # Singleton instance
 data_manager = DataManager()

@@ -17,8 +17,8 @@ public class ChatGrammarParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, TITLE_STRING=17, 
-		STRING=18, INT=19, WS=20;
+		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
+		T__17=18, T__18=19, TITLE_STRING=20, STRING=21, INT=22, WS=23;
 	public static final int
 		RULE_program = 0, RULE_expression = 1, RULE_time = 2, RULE_date = 3, RULE_today = 4, 
 		RULE_query = 5, RULE_start_time = 6, RULE_end_time = 7, RULE_duration = 8, 
@@ -35,14 +35,15 @@ public class ChatGrammarParser extends Parser {
 		return new String[] {
 			null, "'/'", "'today'", "'sunny'", "'cloudy'", "'rainy'", "'windy'", 
 			"'snowy'", "'clear'", "'foggy'", "':'", "'set'", "'show'", "'check'", 
-			"'tell'", "'start'", "'reset'"
+			"'tell'", "'start'", "'reset'", "'complete'", "'finish'", "'done'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, "TITLE_STRING", "STRING", "INT", "WS"
+			null, null, null, null, null, null, null, null, "TITLE_STRING", "STRING", 
+			"INT", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -166,6 +167,9 @@ public class ChatGrammarParser extends Parser {
 			case T__13:
 			case T__14:
 			case T__15:
+			case T__16:
+			case T__17:
+			case T__18:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(26);
@@ -584,7 +588,7 @@ public class ChatGrammarParser extends Parser {
 			{
 			setState(75);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 129024L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 1046528L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -652,7 +656,7 @@ public class ChatGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0014S\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u0017S\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0001"+
@@ -666,7 +670,7 @@ public class ChatGrammarParser extends Parser {
 		"\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\b\u0001\b\u0001\t\u0001"+
 		"\t\u0001\n\u0001\n\u0001\u000b\u0004\u000bO\b\u000b\u000b\u000b\f\u000b"+
 		"P\u0001\u000b\u0000\u0000\f\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010"+
-		"\u0012\u0014\u0016\u0000\u0002\u0001\u0000\u0003\t\u0001\u0000\u000b\u0010"+
+		"\u0012\u0014\u0016\u0000\u0002\u0001\u0000\u0003\t\u0001\u0000\u000b\u0013"+
 		"P\u0000\u0018\u0001\u0000\u0000\u0000\u0002&\u0001\u0000\u0000\u0000\u0004"+
 		"3\u0001\u0000\u0000\u0000\u00065\u0001\u0000\u0000\u0000\b;\u0001\u0000"+
 		"\u0000\u0000\n=\u0001\u0000\u0000\u0000\f?\u0001\u0000\u0000\u0000\u000e"+
@@ -679,7 +683,7 @@ public class ChatGrammarParser extends Parser {
 		"!\u0003\u0004\u0002\u0000 \u001f\u0001\u0000\u0000\u0000 !\u0001\u0000"+
 		"\u0000\u0000!#\u0001\u0000\u0000\u0000\"$\u0003\n\u0005\u0000#\"\u0001"+
 		"\u0000\u0000\u0000#$\u0001\u0000\u0000\u0000$\'\u0001\u0000\u0000\u0000"+
-		"%\'\u0005\u0011\u0000\u0000&\u001a\u0001\u0000\u0000\u0000&%\u0001\u0000"+
+		"%\'\u0005\u0014\u0000\u0000&\u001a\u0001\u0000\u0000\u0000&%\u0001\u0000"+
 		"\u0000\u0000\'\u0003\u0001\u0000\u0000\u0000(*\u0003\f\u0006\u0000)+\u0003"+
 		"\u000e\u0007\u0000*)\u0001\u0000\u0000\u0000*+\u0001\u0000\u0000\u0000"+
 		"+.\u0001\u0000\u0000\u0000,/\u0003\b\u0004\u0000-/\u0003\u0006\u0003\u0000"+
@@ -687,16 +691,16 @@ public class ChatGrammarParser extends Parser {
 		"\u000004\u0003\b\u0004\u000014\u0003\u0006\u0003\u000024\u0003\u0010\b"+
 		"\u00003(\u0001\u0000\u0000\u000030\u0001\u0000\u0000\u000031\u0001\u0000"+
 		"\u0000\u000032\u0001\u0000\u0000\u00004\u0005\u0001\u0000\u0000\u0000"+
-		"56\u0005\u0013\u0000\u000067\u0005\u0001\u0000\u000078\u0005\u0013\u0000"+
-		"\u000089\u0005\u0001\u0000\u00009:\u0005\u0013\u0000\u0000:\u0007\u0001"+
+		"56\u0005\u0016\u0000\u000067\u0005\u0001\u0000\u000078\u0005\u0016\u0000"+
+		"\u000089\u0005\u0001\u0000\u00009:\u0005\u0016\u0000\u0000:\u0007\u0001"+
 		"\u0000\u0000\u0000;<\u0005\u0002\u0000\u0000<\t\u0001\u0000\u0000\u0000"+
-		"=>\u0007\u0000\u0000\u0000>\u000b\u0001\u0000\u0000\u0000?@\u0005\u0013"+
-		"\u0000\u0000@A\u0005\n\u0000\u0000AB\u0005\u0013\u0000\u0000B\r\u0001"+
-		"\u0000\u0000\u0000CD\u0005\u0013\u0000\u0000DE\u0005\n\u0000\u0000EF\u0005"+
-		"\u0013\u0000\u0000F\u000f\u0001\u0000\u0000\u0000GH\u0005\u0013\u0000"+
-		"\u0000H\u0011\u0001\u0000\u0000\u0000IJ\u0005\u0012\u0000\u0000J\u0013"+
+		"=>\u0007\u0000\u0000\u0000>\u000b\u0001\u0000\u0000\u0000?@\u0005\u0016"+
+		"\u0000\u0000@A\u0005\n\u0000\u0000AB\u0005\u0016\u0000\u0000B\r\u0001"+
+		"\u0000\u0000\u0000CD\u0005\u0016\u0000\u0000DE\u0005\n\u0000\u0000EF\u0005"+
+		"\u0016\u0000\u0000F\u000f\u0001\u0000\u0000\u0000GH\u0005\u0016\u0000"+
+		"\u0000H\u0011\u0001\u0000\u0000\u0000IJ\u0005\u0015\u0000\u0000J\u0013"+
 		"\u0001\u0000\u0000\u0000KL\u0007\u0001\u0000\u0000L\u0015\u0001\u0000"+
-		"\u0000\u0000MO\u0005\u0012\u0000\u0000NM\u0001\u0000\u0000\u0000OP\u0001"+
+		"\u0000\u0000MO\u0005\u0015\u0000\u0000NM\u0001\u0000\u0000\u0000OP\u0001"+
 		"\u0000\u0000\u0000PN\u0001\u0000\u0000\u0000PQ\u0001\u0000\u0000\u0000"+
 		"Q\u0017\u0001\u0000\u0000\u0000\b\u001d #&*.3P";
 	public static final ATN _ATN =
