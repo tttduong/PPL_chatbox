@@ -32,7 +32,6 @@ class MainWindow(QMainWindow):
         """Initialize the main window UI"""
         self.setWindowTitle("Virtual Assistant Chat")
         self.setFixedSize(600, 500)  # (width, height)
-        self.setMinimumSize(400, 400)
         self.setStyleSheet(Styles.MAIN_WINDOW)
         
         # Create central widget

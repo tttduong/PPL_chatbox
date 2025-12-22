@@ -11,4 +11,8 @@ pip install -r requirements.txt
 python main.py
 
 /*Example command for chat*/
+- Show lịch full day: 
 show calendar 18/11/2025 
+- Add OBJECT to calendar:
+set meeting 08:00 12:00 25/12/2025
+set meeting 15:30 17:00 today

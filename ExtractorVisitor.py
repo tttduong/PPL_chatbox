@@ -10,6 +10,18 @@ class ExtractorVisitor(ChatGrammarVisitor):
     def visitExpression(self, ctx: ChatGrammarParser.ExpressionContext):
         if ctx.verbs():
             self.result["verbs"] = ctx.verbs().getText()
+        
+        # ✅ THÊM: Xử lý index_number
+        if ctx.index_number():
+            self.result["index"] = int(ctx.index_number().getText())
+        
+        if ctx.objects():
+            if ctx.objects().getText() not in ["calendar", "meeting", "event", "weather", "pomodoro"]:          
+                self.result["objects"] = "invalid_input"
+            else:
+                self.result["objects"] = ctx.objects().getText()
+        if ctx.verbs():
+            self.result["verbs"] = ctx.verbs().getText()
         if ctx.objects():
             #LIST OBJECTS
             if ctx.objects().getText() not in ["calendar", "meeting", "event", "weather", "pomodoro"]:          
@@ -93,3 +105,5 @@ class ExtractorVisitor(ChatGrammarVisitor):
     def visitDuration(self, ctx: ChatGrammarParser.DurationContext):
         minute = int(ctx.INT().getText())
         return f"{minute}"
+    
+ 

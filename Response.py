@@ -76,6 +76,18 @@ class Response():
         Return:
             message response from object
         """
+        # ✅ FIX 1: Handle complete/finish/done with index (no objects)
+        if list.get('verbs') in ['complete', 'finish', 'done'] and list.get('index'):
+            list['objects'] = 'calendar'  # Set default object
+            object = Calendar(list=list, response=self)
+            return object.return_response()
+        
+        # ✅ FIX 2: Handle any command with index but no objects, supposing that user are intẻacting with calendar
+        if list.get('index') and not list.get('objects'):
+            list['objects'] = 'calendar'  # Assume calendar operation
+            object = Calendar(list=list, response=self)
+            return object.return_response()
+    
         # ✅ CALENDAR/MEETING/EVENT
         if (list.get("objects") in ['meeting', 'calendar', 'event']):
             object = Calendar(list=list, response=self)

@@ -2,7 +2,10 @@ grammar ChatGrammar;
 
 program: expression;
 
-expression:  verbs objects (location)? (time)? (query)? | TITLE_STRING;
+expression:  
+    verbs index_number  
+    | verbs objects (location)? (time)? (query)?                           
+    | TITLE_STRING; 
 
 time: start_time end_time? (today | date) | today | date | duration;
 
@@ -17,6 +20,8 @@ start_time: INT ':' INT;
 end_time: INT ':' INT;
 
 duration: INT;
+
+index_number: INT;
 
 objects: STRING;
 
