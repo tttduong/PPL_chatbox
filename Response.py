@@ -11,6 +11,7 @@ from data_manager import data_manager  # ✅ IMPORT MongoDB manager
 class Response():
     def __init__(self):
         self.isContinue = False
+        self.calendar_instance = None  # ✅ Lưu Calendar instance để check pending_action
         pass
     
     def get_response(self, input):
@@ -25,18 +26,30 @@ class Response():
         Return:
             message response from check_input()
         """
+        # ✅ CHECK: Nếu đang có pending_action, xử lý YES/NO trực tiếp
+        if self.calendar_instance and hasattr(self.calendar_instance, 'pending_action'):
+            if self.calendar_instance.pending_action is not None:
+                user_input = input.strip().lower()
+                
+                # ✅ Nhận diện YES
+                if user_input in ['yes', 'y', 'ok', 'confirm', 'sure']:
+                    elements_list = {'verbs': 'yes'}
+                    return self.check_input(elements_list)
+                
+                # ✅ Nhận diện NO
+                elif user_input in ['no', 'n', 'cancel', 'nope']:
+                    elements_list = {'verbs': 'no'}
+                    return self.check_input(elements_list)
+        
+        # ✅ Xử lý bình thường
         if not self.isContinue:
             pre_process = pre_processing(input)
             input_stream = InputStream(pre_process)
-            lexer = ChatGrammarLexer(input_stream)
-            stream = CommonTokenStream(lexer)
-            parser = ChatGrammarParser(stream)
-            tree = parser.program()
-            visitor = ExtractorVisitor()
-            elements_list = visitor.visit(tree)
-            print(elements_list)
         else:
+            # Khi isContinue (đang add title), giữ nguyên input
             input_stream = InputStream(input)
+        
+        try:
             lexer = ChatGrammarLexer(input_stream)
             stream = CommonTokenStream(lexer)
             parser = ChatGrammarParser(stream)
@@ -44,6 +57,10 @@ class Response():
             visitor = ExtractorVisitor()
             elements_list = visitor.visit(tree)
             print(elements_list)
+        except Exception as e:
+            print(f"⚠️ Parse error: {e}")
+            elements_list = {}
+        
         return self.check_input(elements_list)
 
     def get_list(self, input):
@@ -76,26 +93,39 @@ class Response():
         Return:
             message response from object
         """
+        # ✅ Ưu tiên xử lý YES/NO nếu có pending_action
+        if self.calendar_instance and hasattr(self.calendar_instance, 'pending_action'):
+            if self.calendar_instance.pending_action is not None:
+                if list.get('verbs') in ['yes', 'no', 'confirm', 'cancel']:
+                    # Truyền list vào Calendar instance hiện tại
+                    self.calendar_instance.list = list
+                    return self.calendar_instance.return_response()
+        
+        # Handle incomplete/unfinish with index (no objects)
+        if list.get('verbs') in ['delete', 'remove', 'cancel'] and list.get('index'):
+            list['objects'] = 'calendar'  # Set default object
+            self.calendar_instance = Calendar(list=list, response=self)
+            return self.calendar_instance.return_response()
         # Handle incomplete/unfinish with index (no objects)
         if list.get('verbs') in ['incomplete', 'unfinish', 'undo'] and list.get('index'):
             list['objects'] = 'calendar'  # Set default object
-            object = Calendar(list=list, response=self)
-            return object.return_response()
+            self.calendar_instance = Calendar(list=list, response=self)
+            return self.calendar_instance.return_response()
         # Handle complete/finish/done with index (no objects)
         if list.get('verbs') in ['complete', 'finish', 'done'] and list.get('index'):
             list['objects'] = 'calendar'  # Set default object
-            object = Calendar(list=list, response=self)
-            return object.return_response()
+            self.calendar_instance = Calendar(list=list, response=self)
+            return self.calendar_instance.return_response()
         
         # Handle any command with index but no objects, supposing that user are intẻacting with calendar
         if list.get('index') and not list.get('objects'):
             list['objects'] = 'calendar'  # Assume calendar operation
-            object = Calendar(list=list, response=self)
-            return object.return_response()
+            self.calendar_instance = Calendar(list=list, response=self)
+            return self.calendar_instance.return_response()
     
         # ✅ CALENDAR/MEETING/EVENT
         if (list.get("objects") in ['meeting', 'calendar', 'event']):
-            object = Calendar(list=list, response=self)
+            self.calendar_instance = Calendar(list=list, response=self)
             try:
                 if not self.isContinue:
                     # ✅ LƯU VÀO MONGODB thay vì Data_temp.json
@@ -115,30 +145,7 @@ class Response():
                         js.dump(list, f, indent=4)
                 except:
                     pass
-            return object.return_response()
-        
-        # ✅ WEATHER
-        # elif list.get("objects") == "weather" and list.get("location"):
-        #     weather = Weather(list=list)
-        #     response = weather.return_response()
-            
-        #     # ✅ LƯU WEATHER DATA VÀO MONGODB (optional, để cache)
-        #     try:
-        #         weather_data = {
-        #             'location': list.get('location'),
-        #             'query': list,
-        #             'response': response
-        #         }
-        #         data_manager.save_weather_data(weather_data)
-        #     except Exception as e:
-        #         print(f"⚠️ Failed to cache weather data: {e}")
-            
-        #     return response
-        
-        # ✅ POMODORO
-        # elif list.get("objects") == "pomodoro":
-        #     object = Pomodoro(list=list)
-        #     return object.return_response() 
+            return self.calendar_instance.return_response()
         
         # ✅ WRONG INPUT HANDLING
         else:

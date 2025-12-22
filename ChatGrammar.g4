@@ -29,7 +29,8 @@ verbs: ('set' |
         'show' | 'check'| 'tell' | 
         'start' | 'reset' | 
         'complete' | 'finish' | 'done' |
-        'incomplete' | 'unfinished' | 'undo');
+        'incomplete' | 'unfinished' | 'undo'|
+        'delete' | 'remove' | 'cancel');
 
 location: STRING+;
 

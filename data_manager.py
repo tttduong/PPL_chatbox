@@ -270,6 +270,40 @@ class DataManager:
         except Exception as e:
             print(f"❌ Failed to uncomplete event: {e}")
             return 0
-
+    def delete_calendar_event(self, filters):
+        """
+        Delete calendar event(s) based on filters
+        
+        Args:
+            filters (dict): MongoDB query filters
+            
+        Returns:
+            int: Number of deleted documents
+            
+        Example:
+            # Delete by specific event
+            filters = {
+                'date': '22/12/2025',
+                'type': 'event',
+                'description': 'Team Meeting',
+                'start_time': '09:00'
+            }
+            count = data_manager.delete_calendar_event(filters)
+            
+            # Delete all events on a date
+            filters = {
+                'date': '22/12/2025',
+                'type': 'event'
+            }
+            count = data_manager.delete_calendar_event(filters)
+        """
+        try:
+            collection = self.db[self.collections['calendar']]  
+            result = collection.delete_many(filters)
+            print(f"✅ Deleted {result.deleted_count} event(s)")
+            return result.deleted_count
+        except Exception as e:
+            print(f"❌ Error deleting events: {e}")
+            return 0
 # Singleton instance
 data_manager = DataManager()

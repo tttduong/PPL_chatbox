@@ -7,6 +7,7 @@ class Calendar(Module):
         self.responseObject = response
         super().__init__(list)
         self.data_response = data_manager.get_response_templates()
+        self.pending_action = None  #pending wait for deleting 
         self.last_shown_activities = []  # Lưu list activities được show gần nhất
 
     def take_action(self):
@@ -26,6 +27,8 @@ class Calendar(Module):
             pass
         elif self.list['verbs'] in ['incomplete', 'unfinish', 'undo']:
                 pass
+        elif self.list['verbs'] in ['delete' , 'remove' , 'cancel']:
+            pass
         else:
             print('invalid')
         return 
@@ -38,6 +41,7 @@ class Calendar(Module):
         SHOW_VERBS = ['show', 'check', 'tell']
         COMPLETE_VERBS = ['complete', 'finish', 'done']
         INCOMPLETE_VERBS = ['incomplete', 'unfinish', 'undo']
+        DELETE_VERBS = ['delete', 'remove', 'cancel']
 
         if self.list.get("location"):
             if self.responseObject.isContinue:
@@ -45,6 +49,65 @@ class Calendar(Module):
                 response = data_response['wrong_input']['retry_process']
             else:
                 response = data_response["wrong_input"]["missing_object"]
+        # ============ DELETE BY INDEX ============
+        elif self.list.get('verbs') in DELETE_VERBS and self.list.get('index'):
+            index = self.list['index']
+
+            if not self.last_shown_activities:
+                temp_data = data_manager.get_temp_data()
+                if temp_data and 'last_shown_activities' in temp_data:
+                    self.last_shown_activities = temp_data['last_shown_activities']
+
+            if not self.last_shown_activities:
+                response = "No activity list found. Please run 'show calendar' first to see the numbered list."
+            elif index < 1 or index > len(self.last_shown_activities):
+                response = f"Invalid index. Please choose a number between 1 and {len(self.last_shown_activities)}."
+            else:
+                activity = self.last_shown_activities[index - 1]
+
+                # 🔐 LƯU pending delete
+                self.pending_action = {
+                    'action': 'delete',
+                    'activity': activity
+                }
+
+                response = (
+                    f"Are you sure you want to delete this {activity['type']}?\n"
+                    f"{activity['description']} "
+                    f"({activity['start_time']} - {activity.get('end_time', 'N/A')})\n"
+                    "Please reply with 'yes' or 'no'."
+                )
+        # ============ CONFIRM DELETE ============
+        elif self.pending_action and self.pending_action.get('action') == 'delete':
+            if self.list.get('verbs') in ['yes', 'confirm', 'ok']:
+                activity = self.pending_action['activity']
+
+                event_filter = {
+                    'date': activity['date'],
+                    'type': activity['type'],
+                    'description': activity['description'],
+                    'start_time': activity['start_time']
+                }
+
+                count = data_manager.delete_calendar_event(event_filter)
+                self.pending_action = None
+
+                if count > 0:
+                    response = (
+                        f"Deleted: {activity['type'].upper()} - "
+                        f"{activity['description']} "
+                        f"({activity['start_time']} - {activity.get('end_time', 'N/A')})"
+                    )
+                else:
+                    response = "Failed to delete the activity."
+
+            elif self.list.get('verbs') in ['no', 'cancel']:
+                self.pending_action = None
+                response = "Deletion cancelled."
+
+            else:
+                response = "Please reply with 'yes' or 'no'."
+
          # ============ INCOMPLETE BY INDEX ============
         elif self.list.get('verbs') in INCOMPLETE_VERBS and self.list.get('index'):
             index = self.list['index']
