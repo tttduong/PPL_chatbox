@@ -244,7 +244,7 @@ class DataManager:
             print(f"❌ Failed to get incomplete events: {e}")
             return []
 
-    def uncomplete_calendar_event(self, event_filter):
+    def incomplete_calendar_event(self, event_filter):
         """
         Đánh dấu event là chưa hoàn thành (undo complete)
         

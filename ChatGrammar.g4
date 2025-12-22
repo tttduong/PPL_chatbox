@@ -28,7 +28,8 @@ objects: STRING;
 verbs: ('set' | 
         'show' | 'check'| 'tell' | 
         'start' | 'reset' | 
-        'complete' | 'finish' | 'done');
+        'complete' | 'finish' | 'done' |
+        'incomplete' | 'unfinished' | 'undo');
 
 location: STRING+;
 
