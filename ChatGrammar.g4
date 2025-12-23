@@ -4,7 +4,7 @@ program: expression;
 
 expression:  
     verbs index_number  
-    | verbs objects (location)? (time)? (query)?                           
+    | verbs status_filter? objects (location)? (time)? (query)?                           
     | TITLE_STRING; 
 
 time: start_time end_time? (today | date) | today | date | duration;
@@ -13,7 +13,11 @@ date: INT '/' INT '/' INT ;
 
 today: 'today';
 
+// Weather queries
 query: ('sunny' | 'cloudy' | 'rainy' | 'windy' | 'snowy' | 'clear' | 'foggy');
+
+// Status filter for tasks (separate from verbs)
+status_filter: 'incompleted' | 'completed' | 'pending' | 'done';
 
 start_time: INT ':' INT;
 
@@ -28,8 +32,8 @@ objects: STRING;
 verbs: ('set' | 
         'show' | 'check'| 'tell' | 
         'start' | 'reset' | 
-        'complete' | 'finish' | 'done' |
-        'incomplete' | 'unfinished' | 'undo'|
+        'complete' | 'finish' | 
+        'undo' | 'unfinish' |
         'delete' | 'remove' | 'cancel');
 
 location: STRING+;

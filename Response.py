@@ -93,7 +93,7 @@ class Response():
         Return:
             message response from object
         """
-        # ✅ Ưu tiên xử lý YES/NO nếu có pending_action
+        # ✅ Ưu tiên xử lý YES/NO nếu có pending_action (no objects)
         if self.calendar_instance and hasattr(self.calendar_instance, 'pending_action'):
             if self.calendar_instance.pending_action is not None:
                 if list.get('verbs') in ['yes', 'no', 'confirm', 'cancel']:

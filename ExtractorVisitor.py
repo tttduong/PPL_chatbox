@@ -1,7 +1,7 @@
 from CompiledFiles.ChatGrammarParser import ChatGrammarParser
 from CompiledFiles.ChatGrammarVisitor import ChatGrammarVisitor
 from datetime import datetime
-from data_manager import data_manager  # ✅ IMPORT MongoDB manager
+from data_manager import data_manager  
 
 class ExtractorVisitor(ChatGrammarVisitor):
     def __init__(self):
@@ -33,9 +33,15 @@ class ExtractorVisitor(ChatGrammarVisitor):
         if ctx.location():
             self.result["location"] = self.visit(ctx.location())
         if ctx.query():
-            self.result["query"] = self.visit(ctx.query())
+            query_text = self.visit(ctx.query())
+            self.result["query"] = query_text
         
-        # ✅ FIX: Đọc từ MongoDB thay vì file JSON
+        # Handle status_filter (incomplete/completed)
+        if ctx.status_filter():
+            status_text = ctx.status_filter().getText()
+            self.result["status_filter"] = status_text
+
+        # Đọc từ MongoDB thay vì file JSON
         if ctx.TITLE_STRING():
             title = ctx.TITLE_STRING().getText()
             self.result["title"] = title.replace("\"", "").strip()

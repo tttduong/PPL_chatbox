@@ -66,9 +66,9 @@ class MainWindow(QMainWindow):
         # Welcome message
         self.chat_display.add_message(
             self.bot_name,
-            "Hello! I'm your Virtual Assistant. How can I help you today?"
+            'Welcome back! I am your Virtual Assistant 👋 I can help you manage your calendar 😁. You can try: "show calendar today", "check event incompleted 22/12/2025", "set meeting 15:30 17:00 today".'
         )
-    
+
     def _create_header(self):
         """Create the header label"""
         header = QLabel("🤖 Virtual Assistant")

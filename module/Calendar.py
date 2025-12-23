@@ -42,6 +42,8 @@ class Calendar(Module):
         COMPLETE_VERBS = ['complete', 'finish', 'done']
         INCOMPLETE_VERBS = ['incomplete', 'unfinish', 'undo']
         DELETE_VERBS = ['delete', 'remove', 'cancel']
+        STATUS_INCOMPLETE = ['incompleted', 'pending']
+        STATUS_COMPLETE = ['completed', 'done']
 
         if self.list.get("location"):
             if self.responseObject.isContinue:
@@ -49,6 +51,75 @@ class Calendar(Module):
                 response = data_response['wrong_input']['retry_process']
             else:
                 response = data_response["wrong_input"]["missing_object"]
+        
+        # ============ SHOW INCOMPLETE TASKS ============
+        elif (self.list.get('verbs') in SHOW_VERBS and 
+              self.list.get('status_filter') in STATUS_INCOMPLETE):
+            
+            # Get incomplete events with optional date filter
+            filters = {'completed': {'$ne': True}}
+            
+            if self.list.get('date'):
+                filters['date'] = self.list['date']
+            
+            # Filter by type if specified
+            if self.list.get('objects') in ['event', 'meeting']:
+                filters['type'] = self.list['objects']
+            
+            incomplete_activities = data_manager.get_calendar_events(filters=filters)
+            
+            if not incomplete_activities:
+                if self.list.get('date'):
+                    response = f"No incomplete tasks found on {self.list['date']}."
+                else:
+                    response = "You have no incomplete tasks! Great job! 🎉"
+            else:
+                # Save to memory for later operations
+                self.last_shown_activities = incomplete_activities
+                data_manager.save_temp_data({
+                    'last_shown_activities': incomplete_activities
+                })
+                
+                # Format response
+                if self.list.get('date'):
+                    response = self._format_incomplete_tasks(incomplete_activities, self.list['date'])
+                else:
+                    response = self._format_incomplete_tasks(incomplete_activities)
+        
+        # ============ SHOW COMPLETED TASKS ============
+        elif (self.list.get('verbs') in SHOW_VERBS and 
+              self.list.get('status_filter') in STATUS_COMPLETE):
+            
+            # Get completed events with optional date filter
+            filters = {'completed': True}
+            
+            if self.list.get('date'):
+                filters['date'] = self.list['date']
+            
+            # Filter by type if specified
+            if self.list.get('objects') in ['event', 'meeting']:
+                filters['type'] = self.list['objects']
+            
+            completed_activities = data_manager.get_calendar_events(filters=filters)
+            
+            if not completed_activities:
+                if self.list.get('date'):
+                    response = f"No completed tasks found on {self.list['date']}."
+                else:
+                    response = "You have no completed tasks yet."
+            else:
+                # Save to memory
+                self.last_shown_activities = completed_activities
+                data_manager.save_temp_data({
+                    'last_shown_activities': completed_activities
+                })
+                
+                # Format response
+                if self.list.get('date'):
+                    response = self._format_completed_tasks(completed_activities, self.list['date'])
+                else:
+                    response = self._format_completed_tasks(completed_activities)
+        
         # ============ DELETE BY INDEX ============
         elif self.list.get('verbs') in DELETE_VERBS and self.list.get('index'):
             index = self.list['index']
@@ -77,6 +148,7 @@ class Calendar(Module):
                     f"({activity['start_time']} - {activity.get('end_time', 'N/A')})\n"
                     "Please reply with 'yes' or 'no'."
                 )
+        
         # ============ CONFIRM DELETE ============
         elif self.pending_action and self.pending_action.get('action') == 'delete':
             if self.list.get('verbs') in ['yes', 'confirm', 'ok']:
@@ -108,30 +180,22 @@ class Calendar(Module):
             else:
                 response = "Please reply with 'yes' or 'no'."
 
-         # ============ INCOMPLETE BY INDEX ============
+        # ============ INCOMPLETE BY INDEX ============
         elif self.list.get('verbs') in INCOMPLETE_VERBS and self.list.get('index'):
             index = self.list['index']
             
-            # ✅ Đọc từ MongoDB nếu memory rỗng
             if not self.last_shown_activities:
                 temp_data = data_manager.get_temp_data()
                 if temp_data and 'last_shown_activities' in temp_data:
                     self.last_shown_activities = temp_data['last_shown_activities']
             
-            print(f"🔍 DEBUG Complete by index:")
-            print(f"   - Index: {index}")
-            print(f"   - Last shown activities: {len(self.last_shown_activities)} items")
-            
-            # Kiểm tra xem có danh sách activities không
             if not self.last_shown_activities:
                 response = "No activity list found. Please run 'show calendar' first to see the numbered list."
             elif index < 1 or index > len(self.last_shown_activities):
                 response = f"Invalid index. Please choose a number between 1 and {len(self.last_shown_activities)}."
             else:
-                # Lấy activity theo index (index - 1 vì list bắt đầu từ 0)
                 activity = self.last_shown_activities[index - 1]
                 
-                # Complete activity này
                 event_filter = {
                     'date': activity['date'],
                     'type': activity['type'],
@@ -145,11 +209,11 @@ class Calendar(Module):
                     response = f"Incompleted: {activity['type'].upper()} - {activity['description']} ({activity['start_time']} - {activity.get('end_time', 'N/A')})"
                 else:
                     response = "Failed to incomplete the activity."
-         # ============ INCOMPLETE ALL EVENT/MEETING ============
+        
+        # ============ INCOMPLETE ALL EVENT/MEETING ============
         elif self.list.get('verbs') in INCOMPLETE_VERBS:
             if self.list['objects'] in ['event', 'meeting']:
                 if self.list.get('date'):
-                    # Incomplete tất cả events/meetings trong ngày đó
                     event_filter = {
                         'date': self.list['date'],
                         'type': self.list['objects'],
@@ -163,39 +227,32 @@ class Calendar(Module):
                         response = f"No completed {self.list['objects']} found on {self.list['date']}."
                 else:
                     response = (
-                    "Please tell me the date of the meeting you want to undo.\n"
-                    "For example: \"Incomplete meeting on 01/01/2025\"."
-                   )
+                        "Please tell me the date of the meeting you want to undo.\n"
+                        "For example: \"Incomplete meeting on 01/01/2025\"."
+                    )
 
             elif self.list['objects'] == 'calendar':
                 response = "Please specify whether you want to complete an 'event' or 'meeting'."
             
             else:
                 response = data_response["wrong_input"]["missing_object"]
+        
         # ============ COMPLETE BY INDEX ============
         elif self.list.get('verbs') in COMPLETE_VERBS and self.list.get('index'):
             index = self.list['index']
             
-            # ✅ Đọc từ MongoDB nếu memory rỗng
             if not self.last_shown_activities:
                 temp_data = data_manager.get_temp_data()
                 if temp_data and 'last_shown_activities' in temp_data:
                     self.last_shown_activities = temp_data['last_shown_activities']
             
-            print(f"🔍 DEBUG Complete by index:")
-            print(f"   - Index: {index}")
-            print(f"   - Last shown activities: {len(self.last_shown_activities)} items")
-            
-            # Kiểm tra xem có danh sách activities không
             if not self.last_shown_activities:
                 response = "No activity list found. Please run 'show calendar' first to see the numbered list."
             elif index < 1 or index > len(self.last_shown_activities):
                 response = f"Invalid index. Please choose a number between 1 and {len(self.last_shown_activities)}."
             else:
-                # Lấy activity theo index (index - 1 vì list bắt đầu từ 0)
                 activity = self.last_shown_activities[index - 1]
                 
-                # Complete activity này
                 event_filter = {
                     'date': activity['date'],
                     'type': activity['type'],
@@ -214,7 +271,6 @@ class Calendar(Module):
         elif self.list.get('verbs') in COMPLETE_VERBS:
             if self.list['objects'] in ['event', 'meeting']:
                 if self.list.get('date'):
-                    # Complete tất cả events/meetings trong ngày đó
                     event_filter = {
                         'date': self.list['date'],
                         'type': self.list['objects'],
@@ -227,10 +283,10 @@ class Calendar(Module):
                     else:
                         response = f"No incomplete {self.list['objects']} found on {self.list['date']}."
                 else:
-                      response = (
-                    "Please tell me the date of the meeting you want to mark completed.\n"
-                    "For example: \"Complete meeting on 01/01/2025\"."
-                   )
+                    response = (
+                        "Please tell me the date of the meeting you want to mark completed.\n"
+                        "For example: \"Complete meeting on 01/01/2025\"."
+                    )
 
             elif self.list['objects'] == 'calendar':
                 response = "Please specify whether you want to complete an 'event' or 'meeting'."
@@ -260,7 +316,6 @@ class Calendar(Module):
                             date=self.list['date']
                         )
                     else:
-                        # Lưu list vào MongoDB để complete sau
                         self.last_shown_activities = filtered_activities
                         data_manager.save_temp_data({
                             'last_shown_activities': filtered_activities
@@ -291,7 +346,6 @@ class Calendar(Module):
                         date=self.list['date']
                     )
                 else:
-                    # Lưu list vào MongoDB để complete sau
                     self.last_shown_activities = activities
                     data_manager.save_temp_data({
                         'last_shown_activities': activities
@@ -363,14 +417,13 @@ class Calendar(Module):
         result = f"📅 Your schedule for {date}:\n"
         result += "_" * 96 + "\n\n"
         
-        for idx, activity in enumerate(activities, start=1):  # Thêm số thứ tự
+        for idx, activity in enumerate(activities, start=1):
             activity_type = activity.get('type', 'activity')
             title = activity.get('description', 'Untitled')
             start = activity.get('start_time', 'N/A')
             end = activity.get('end_time', 'N/A')
             completed = activity.get('completed', False)
             
-            # Icon theo type
             if activity_type == 'event':
                 icon = '📅'
             elif activity_type == 'meeting':
@@ -378,19 +431,111 @@ class Calendar(Module):
             else:
                 icon = '📌'
             
-            # Status icon
             status_icon = '✅' if completed else '☐'
             
-            # ✅ Build card với số thứ tự
             result += f"[{idx}] {status_icon} {activity_type.upper()}\n"
             result += f"     Title: {title}\n"
             result += f"     Time:  {start} - {end}\n"
-            
-            # if completed:
-            #     result += f"     Status: COMPLETED ✓\n"
-            
             result += "_" * 96 + "\n\n"
         
         result += f"\n💡 Tip: Type 'complete [number]' to mark an activity as done (e.g., 'complete 1')\n"
+        
+        return result
+    
+    def _format_incomplete_tasks(self, activities, date=None):
+        """
+        Format incomplete tasks với số thứ tự và nhóm theo ngày
+        """
+        if not activities:
+            return "You have no incomplete tasks! 🎉"
+        
+        if date:
+            result = f"📝 Incomplete tasks for {date}:\n"
+        else:
+            result = f"📝 All incomplete tasks:\n"
+        
+        result += "_" * 96 + "\n\n"
+        
+        # Group by date if showing all
+        if not date:
+            from collections import defaultdict
+            grouped = defaultdict(list)
+            for activity in activities:
+                grouped[activity['date']].append(activity)
+            
+            idx = 1
+            for task_date in sorted(grouped.keys()):
+                result += f"📆 {task_date}================================================ "
+                for activity in grouped[task_date]:
+                    result += self._format_single_task(activity, idx)
+                    idx += 1
+                result += "\n"
+        else:
+            for idx, activity in enumerate(activities, start=1):
+                result += self._format_single_task(activity, idx)
+        
+        result += f"\n💡 Tip: Type 'complete [number]' to mark a task as done\n"
+        result += f"💡 Tip: Type 'delete [number]' to remove a task\n"
+        
+        return result
+    
+    def _format_completed_tasks(self, activities, date=None):
+        """
+        Format completed tasks với số thứ tự
+        """
+        if not activities:
+            return "No completed tasks found."
+        
+        if date:
+            result = f"✅ Completed tasks for {date}:\n"
+        else:
+            result = f"✅ All completed tasks:\n"
+        
+        result += "_" * 96 + "\n\n"
+        
+        # Group by date if showing all
+        if not date:
+            from collections import defaultdict
+            grouped = defaultdict(list)
+            for activity in activities:
+                grouped[activity['date']].append(activity)
+            
+            idx = 1
+            for task_date in sorted(grouped.keys()):
+                result += f"📆 {task_date}================================================ "
+                for activity in grouped[task_date]:
+                    result += self._format_single_task(activity, idx, completed=True)
+                    idx += 1
+                result += "\n"
+        else:
+            for idx, activity in enumerate(activities, start=1):
+                result += self._format_single_task(activity, idx, completed=True)
+        
+        result += f"\n💡 Tip: Type 'incomplete [number]' to unmark a task\n"
+        
+        return result
+    
+    def _format_single_task(self, activity, idx, completed=False):
+        """
+        Format một task duy nhất
+        """
+        activity_type = activity.get('type', 'activity')
+        title = activity.get('description', 'Untitled')
+        start = activity.get('start_time', 'N/A')
+        end = activity.get('end_time', 'N/A')
+        
+        if activity_type == 'event':
+            icon = '📅'
+        elif activity_type == 'meeting':
+            icon = '🤝'
+        else:
+            icon = '📌'
+        
+        status_icon = '✅' if completed else '☐'
+        
+        result = f"[{idx}] {status_icon} {activity_type.upper()}\n"
+        result += f"     Title: {title}\n"
+        result += f"     Time:  {start} - {end}\n"
+        result += "_" * 96 + "\n\n"
         
         return result
