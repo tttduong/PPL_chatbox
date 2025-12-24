@@ -4,7 +4,7 @@ program: expression;
 
 expression:  
     verbs index_number  
-    | verbs status_filter? objects (time)? (query)?                           
+    | verbs status_filter? objects (time)?                         
     | TITLE_STRING; 
 
 time: start_time end_time? (today | date) | today | date | duration;
@@ -13,10 +13,7 @@ date: INT '/' INT '/' INT ;
 
 today: 'today';
 
-// Weather queries
-query: ('sunny' | 'cloudy' | 'rainy' | 'windy' | 'snowy' | 'clear' | 'foggy');
-
-// Status filter for tasks (separate from verbs)
+// Status filter for tasks 
 status_filter: 'incompleted' | 'completed' | 'pending' | 'done';
 
 start_time: INT ':' INT;

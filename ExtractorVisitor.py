@@ -30,11 +30,7 @@ class ExtractorVisitor(ChatGrammarVisitor):
                 self.result["objects"] = ctx.objects().getText()
         if ctx.time():
             self.visit(ctx.time())
-        # if ctx.location():
-        #     self.result["location"] = self.visit(ctx.location())
-        if ctx.query():
-            query_text = self.visit(ctx.query())
-            self.result["query"] = query_text
+
         
         # Handle status_filter (incomplete/completed)
         if ctx.status_filter():
@@ -102,11 +98,6 @@ class ExtractorVisitor(ChatGrammarVisitor):
             hour = 'invalid_input'
         return f"{hour:02d}:{minute:02d}"
         
-    # def visitLocation(self, ctx: ChatGrammarParser.LocationContext):
-    #     return ctx.getText()
-    
-    def visitQuery(self, ctx:ChatGrammarParser.QueryContext):
-        return ctx.getText()
 
     def visitDuration(self, ctx: ChatGrammarParser.DurationContext):
         minute = int(ctx.INT().getText())

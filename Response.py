@@ -3,15 +3,12 @@ from CompiledFiles.ChatGrammarParser import ChatGrammarParser
 from ExtractorVisitor import ExtractorVisitor
 from antlr4 import *
 from module.Calendar import Calendar
-# from module.Weather import Weather
-# from module.Pomodoro import Pomodoro
 import json as js
-from data_manager import data_manager  # ✅ IMPORT MongoDB manager
-
+from data_manager import data_manager 
 class Response():
     def __init__(self):
         self.isContinue = False
-        self.calendar_instance = None  # ✅ Lưu Calendar instance để check pending_action
+        self.calendar_instance = None 
         pass
     
     def get_response(self, input):
@@ -26,22 +23,22 @@ class Response():
         Return:
             message response from check_input()
         """
-        # ✅ CHECK: Nếu đang có pending_action, xử lý YES/NO trực tiếp
+        # Nếu đang có pending_action, xử lý YES/NO trực tiếp
         if self.calendar_instance and hasattr(self.calendar_instance, 'pending_action'):
             if self.calendar_instance.pending_action is not None:
                 user_input = input.strip().lower()
                 
-                # ✅ Nhận diện YES
+                # Nhận diện YES
                 if user_input in ['yes', 'y', 'ok', 'confirm', 'sure']:
                     elements_list = {'verbs': 'yes'}
                     return self.check_input(elements_list)
                 
-                # ✅ Nhận diện NO
+                # Nhận diện NO
                 elif user_input in ['no', 'n', 'cancel', 'nope']:
                     elements_list = {'verbs': 'no'}
                     return self.check_input(elements_list)
         
-        # ✅ Xử lý bình thường
+        # Xử lý bình thường
         if not self.isContinue:
             pre_process = pre_processing(input)
             input_stream = InputStream(pre_process)
@@ -93,7 +90,7 @@ class Response():
         Return:
             message response from object
         """
-        # ✅ Ưu tiên xử lý YES/NO nếu có pending_action (no objects)
+        # Ưu tiên xử lý YES/NO nếu có pending_action (no objects)
         if self.calendar_instance and hasattr(self.calendar_instance, 'pending_action'):
             if self.calendar_instance.pending_action is not None:
                 if list.get('verbs') in ['yes', 'no', 'confirm', 'cancel']:
@@ -123,22 +120,22 @@ class Response():
             self.calendar_instance = Calendar(list=list, response=self)
             return self.calendar_instance.return_response()
     
-        # ✅ CALENDAR/MEETING/EVENT
+        # CALENDAR/MEETING/EVENT
         if (list.get("objects") in ['meeting', 'calendar', 'event']):
             self.calendar_instance = Calendar(list=list, response=self)
             try:
                 if not self.isContinue:
-                    # ✅ LƯU VÀO MONGODB thay vì Data_temp.json
+                    # LƯU VÀO MONGODB thay vì Data_temp.json
                     result = data_manager.save_temp_data(list)
                     if result:
-                        print(f"✅ Activities saved to MongoDB (ID: {result})")
+                        print(f"Activities saved to MongoDB (ID: {result})")
                     else:
-                        print("⚠️ Failed to save to MongoDB, falling back to file")
+                        print("Failed to save to MongoDB, falling back to file")
                         # Fallback: vẫn lưu file nếu MongoDB fail
                         with open('data/Data_temp.json', 'w') as f: 
                             js.dump(list, f, indent=4)
             except Exception as e: 
-                print(f"❌ Failed to save activities: {e}")
+                print(f"Failed to save activities: {e}")
                 # Fallback to file
                 try:
                     with open('data/Data_temp.json', 'w') as f: 
@@ -147,18 +144,18 @@ class Response():
                     pass
             return self.calendar_instance.return_response()
         
-        # ✅ WRONG INPUT HANDLING
+        # WRONG INPUT HANDLING
         else:
-            # ✅ ĐỌC RESPONSE TEMPLATES TỪ MONGODB thay vì Data_Response.json
+            # ĐỌC RESPONSE TEMPLATES TỪ MONGODB thay vì Data_Response.json
             try:
                 data_response = data_manager.get_response_templates()
                 
                 # Nếu MongoDB chưa có data, fallback về file
                 if not data_response:
-                    print("⚠️ No templates in MongoDB, reading from file...")
+                    print("No templates in MongoDB, reading from file...")
                     data_response = js.load(open("data/Data_Response.json"))
             except Exception as e:
-                print(f"⚠️ Error reading templates: {e}, fallback to file")
+                print(f"Error reading templates: {e}, fallback to file")
                 data_response = js.load(open("data/Data_Response.json"))
             
             if self.isContinue:

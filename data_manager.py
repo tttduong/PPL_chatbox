@@ -13,9 +13,7 @@ class DataManager:
         self.collections = {
             'temp': 'temp_data',           # Thay thế Data_temp.json
             'calendar': 'data_calendar',   # Thay thế Data_Calendar.json
-            'pomodoro': 'data_pomodoro',   # Thay thế Data_Pomodoro.json
             'response': 'data_response_data',   # Thay thế Data_Response.json
-            'weather': 'weather_data'      # Thay thế weather_data.json
         }
     
     def save_temp_data(self, data):

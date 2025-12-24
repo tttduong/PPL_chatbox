@@ -1,5 +1,4 @@
-#đảm bảo rằng mọi module con (như Weather.py, Calendar.py) 
-# khi được tạo ra đều có cùng các phương thức cơ bản
+# phương thức cơ bản
 class Module():
     def __init__(self, list):
         self.list = list
