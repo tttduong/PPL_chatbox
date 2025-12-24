@@ -45,15 +45,10 @@ class Calendar(Module):
         STATUS_INCOMPLETE = ['incompleted', 'pending']
         STATUS_COMPLETE = ['completed', 'done']
 
-        if self.list.get("location"):
-            if self.responseObject.isContinue:
-                self.responseObject.isContinue = False
-                response = data_response['wrong_input']['retry_process']
-            else:
-                response = data_response["wrong_input"]["missing_object"]
+      
         
         # ============ SHOW INCOMPLETE TASKS ============
-        elif (self.list.get('verbs') in SHOW_VERBS and 
+        if (self.list.get('verbs') in SHOW_VERBS and 
               self.list.get('status_filter') in STATUS_INCOMPLETE):
             
             # Get incomplete events with optional date filter
@@ -371,7 +366,7 @@ class Calendar(Module):
                 "description": self.list['title'],
                 "start_time": data_temp['start_time'],
                 "end_time": data_temp.get('end_time'),
-                "location": data_temp.get('location'),
+               
                 "completed": False
             }
             

@@ -89,48 +89,49 @@ class MainWindow(QMainWindow):
         """Handle message sent from input panel"""
         # Display user message
         self.chat_display.add_message("You", message)
-        
+        self._handle_normal_response(message)
         # Parse message
-        element_list = self.response.get_list(message)
+        # element_list = self.response.get_list(message)
         
-        # Check for Pomodoro command
-        if (element_list.get('verbs') == "start" and 
-            element_list.get('objects') == "pomodoro"):
-            self._handle_pomodoro(message)
-        else:
-            self._handle_normal_response(message)
+        # # Check for Pomodoro command
+        # if (element_list.get('verbs') == "start" and 
+        #     element_list.get('objects') == "pomodoro"):
+        #     self._handle_pomodoro(message)
+        # else:
+        #     self._handle_normal_response(message)
+
     
-    def _handle_pomodoro(self, message: str):
-        """Handle Pomodoro timer request"""
-        try:
-            with open("data/Data_pomodoro.json", 'r') as f:
-                data = json.load(f)
-            duration = data['pomodoro']['duration']
-        except (FileNotFoundError, KeyError):
-            duration = 25 * 60  # Default 25 minutes
+    # def _handle_pomodoro(self, message: str):
+    #     """Handle Pomodoro timer request"""
+    #     try:
+    #         with open("data/Data_pomodoro.json", 'r') as f:
+    #             data = json.load(f)
+    #         duration = data['pomodoro']['duration']
+    #     except (FileNotFoundError, KeyError):
+    #         duration = 25 * 60  # Default 25 minutes
         
-        # Display Pomodoro start message
-        self.chat_display.add_message(
-            self.bot_name,
-            "🍅 Pomodoro session started! Focus time begins now..."
-        )
+    #     # Display Pomodoro start message
+    #     self.chat_display.add_message(
+    #         self.bot_name,
+    #         "🍅 Pomodoro session started! Focus time begins now..."
+    #     )
         
-        # Disable input during Pomodoro
-        self.input_panel.set_enabled(False)
+    #     # Disable input during Pomodoro
+    #     self.input_panel.set_enabled(False)
         
-        # Schedule end of Pomodoro
-        QTimer.singleShot(duration * 1000, lambda: self._end_pomodoro(message))
+    #     # Schedule end of Pomodoro
+    #     QTimer.singleShot(duration * 1000, lambda: self._end_pomodoro(message))
     
-    def _end_pomodoro(self, original_message: str):
-        """Handle end of Pomodoro session"""
-        self.chat_display.add_message(
-            self.bot_name,
-            "✅ Pomodoro session completed! Great work! Time for a break."
-        )
+    # def _end_pomodoro(self, original_message: str):
+    #     """Handle end of Pomodoro session"""
+    #     self.chat_display.add_message(
+    #         self.bot_name,
+    #         "✅ Pomodoro session completed! Great work! Time for a break."
+    #     )
         
-        # Re-enable input
-        self.input_panel.set_enabled(True)
-        self.input_panel.focus_input()
+    #     # Re-enable input
+    #     self.input_panel.set_enabled(True)
+    #     self.input_panel.focus_input()
     
     def _handle_normal_response(self, message: str):
         """Handle normal message response"""

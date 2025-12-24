@@ -113,39 +113,7 @@ class DataManager:
             print(f"❌ Failed to get response templates: {e}")
             return {}
     
-    def save_weather_data(self, weather_data):
-        """Lưu weather data"""
-        try:
-            collection = self.db[self.collections['weather']]
-            weather_data['timestamp'] = datetime.now()
-            
-            # Cache weather data (overwrite nếu cùng location)
-            location = weather_data.get('location')
-            if location:
-                collection.update_one(
-                    {'location': location},
-                    {'$set': weather_data},
-                    upsert=True
-                )
-                print(f"✅ Weather data saved for {location}")
-            else:
-                result = collection.insert_one(weather_data)
-                print(f"✅ Weather data saved with ID: {result.inserted_id}")
-        except Exception as e:
-            print(f"❌ Failed to save weather data: {e}")
-    
-    def get_weather_data(self, location):
-        """Lấy weather data theo location"""
-        try:
-            collection = self.db[self.collections['weather']]
-            data = collection.find_one({'location': location})
-            if data:
-                data.pop('_id', None)
-            return data
-        except Exception as e:
-            print(f"❌ Failed to get weather data: {e}")
-            return None
-    
+  
     def _get_session_id(self):
         """Generate session ID (có thể dùng user ID nếu có authentication)"""
         return datetime.now().strftime("%Y%m%d_%H%M%S")

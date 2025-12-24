@@ -4,7 +4,7 @@ program: expression;
 
 expression:  
     verbs index_number  
-    | verbs status_filter? objects (location)? (time)? (query)?                           
+    | verbs status_filter? objects (time)? (query)?                           
     | TITLE_STRING; 
 
 time: start_time end_time? (today | date) | today | date | duration;
@@ -36,7 +36,6 @@ verbs: ('set' |
         'undo' | 'unfinish' |
         'delete' | 'remove' | 'cancel');
 
-location: STRING+;
 
 TITLE_STRING: '"' (~[\r\n])* '"';
 
