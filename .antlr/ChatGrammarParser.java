@@ -1,4 +1,4 @@
-// Generated from c:/projects/PPL_chatbox/ChatGrammar.g4 by ANTLR 4.13.1
+// Generated from d:/GitHub/PPL_chatbox/ChatGrammar.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -105,6 +105,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_program; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterProgram(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitProgram(this);
+		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -150,6 +158,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitExpression(this);
+		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -239,6 +255,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_time; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterTime(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitTime(this);
+		}
 	}
 
 	public final TimeContext time() throws RecognitionException {
@@ -327,6 +351,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_date; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterDate(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitDate(this);
+		}
 	}
 
 	public final DateContext date() throws RecognitionException {
@@ -364,6 +396,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_today; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterToday(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitToday(this);
+		}
 	}
 
 	public final TodayContext today() throws RecognitionException {
@@ -393,6 +433,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_status_filter; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterStatus_filter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitStatus_filter(this);
+		}
 	}
 
 	public final Status_filterContext status_filter() throws RecognitionException {
@@ -435,6 +483,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_start_time; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterStart_time(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitStart_time(this);
+		}
 	}
 
 	public final Start_timeContext start_time() throws RecognitionException {
@@ -472,6 +528,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_end_time; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterEnd_time(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitEnd_time(this);
+		}
 	}
 
 	public final End_timeContext end_time() throws RecognitionException {
@@ -506,6 +570,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_duration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterDuration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitDuration(this);
+		}
 	}
 
 	public final DurationContext duration() throws RecognitionException {
@@ -536,6 +608,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_index_number; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterIndex_number(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitIndex_number(this);
+		}
 	}
 
 	public final Index_numberContext index_number() throws RecognitionException {
@@ -566,6 +646,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_objects; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterObjects(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitObjects(this);
+		}
 	}
 
 	public final ObjectsContext objects() throws RecognitionException {
@@ -595,6 +683,14 @@ public class ChatGrammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_verbs; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).enterVerbs(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ChatGrammarListener ) ((ChatGrammarListener)listener).exitVerbs(this);
+		}
 	}
 
 	public final VerbsContext verbs() throws RecognitionException {
