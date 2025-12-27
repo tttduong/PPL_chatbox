@@ -13,7 +13,7 @@ A chatbot application with integrated to-do list functionality, built for the Pr
 
 Create a `.env` file in the project root directory and add the following:
 ```
-MONGO_URI="mongodb+srv://tttduong23_db_user:ppl_Chat2025@ppl-cluster.dcfrxsp.mongodb.net/"
+
 ```
 
 ### 2. Virtual Environment Setup
