@@ -14,7 +14,7 @@ date: INT '/' INT '/' INT ;
 today: 'today';
 
 // Status filter for tasks 
-status_filter: 'incompleted' | 'completed' | 'pending' | 'done';
+status_filter: 'done' | 'pending' ;
 
 start_time: INT ':' INT;
 
@@ -27,10 +27,9 @@ index_number: INT;
 objects: STRING;
 
 verbs: ('set' | 
-        'show' | 'check'| 'tell' | 
-        'start' | 'reset' | 
+        'show' | 'check' | 
         'complete' | 'finish' | 
-        'undo' | 'unfinish' |
+        'incomplete' | 'unfinish' |
         'delete' | 'remove' | 'cancel');
 
 

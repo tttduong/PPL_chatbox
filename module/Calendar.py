@@ -19,13 +19,13 @@ class Calendar(Module):
         Return:
             None
         """
-        if self.list['verbs'] == 'show':
+        if self.list['verbs'] == ['show', 'check']:
             pass
         elif self.list['verbs'] == 'set':
             pass
-        elif self.list['verbs'] in ['complete', 'finish', 'done']:
+        elif self.list['verbs'] in ['complete', 'finish']:
             pass
-        elif self.list['verbs'] in ['incomplete', 'unfinish', 'undo']:
+        elif self.list['verbs'] in ['incomplete', 'unfinish']:
                 pass
         elif self.list['verbs'] in ['delete' , 'remove' , 'cancel']:
             pass
@@ -38,12 +38,12 @@ class Calendar(Module):
         data_response = self.data_response
         
         # GROUP VERBS
-        SHOW_VERBS = ['show', 'check', 'tell']
-        COMPLETE_VERBS = ['complete', 'finish', 'done']
-        INCOMPLETE_VERBS = ['incomplete', 'unfinish', 'undo']
+        SHOW_VERBS = ['show', 'check']
+        COMPLETE_VERBS = ['complete', 'finish']
+        INCOMPLETE_VERBS = ['incomplete', 'unfinish']
         DELETE_VERBS = ['delete', 'remove', 'cancel']
-        STATUS_INCOMPLETE = ['incompleted', 'pending']
-        STATUS_COMPLETE = ['completed', 'done']
+        STATUS_INCOMPLETE = ['pending']
+        STATUS_COMPLETE = ['done']
 
       
         

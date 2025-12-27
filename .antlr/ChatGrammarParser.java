@@ -17,8 +17,8 @@ public class ChatGrammarParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, TITLE_STRING=21, STRING=22, INT=23, WS=24;
+		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, TITLE_STRING=16, 
+		STRING=17, INT=18, WS=19;
 	public static final int
 		RULE_program = 0, RULE_expression = 1, RULE_time = 2, RULE_date = 3, RULE_today = 4, 
 		RULE_status_filter = 5, RULE_start_time = 6, RULE_end_time = 7, RULE_duration = 8, 
@@ -33,18 +33,16 @@ public class ChatGrammarParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'/'", "'today'", "'incompleted'", "'completed'", "'pending'", 
-			"'done'", "':'", "'set'", "'show'", "'check'", "'tell'", "'start'", "'reset'", 
-			"'complete'", "'finish'", "'undo'", "'unfinish'", "'delete'", "'remove'", 
-			"'cancel'"
+			null, "'/'", "'today'", "'done'", "'pending'", "':'", "'set'", "'show'", 
+			"'check'", "'complete'", "'finish'", "'incomplete'", "'unfinish'", "'delete'", 
+			"'remove'", "'cancel'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, null, null, "TITLE_STRING", 
-			"STRING", "INT", "WS"
+			null, null, null, null, "TITLE_STRING", "STRING", "INT", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -179,7 +177,7 @@ public class ChatGrammarParser extends Parser {
 				setState(31);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 120L) != 0)) {
+				if (_la==T__2 || _la==T__3) {
 					{
 					setState(30);
 					status_filter();
@@ -406,7 +404,7 @@ public class ChatGrammarParser extends Parser {
 			{
 			setState(61);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 120L) != 0)) ) {
+			if ( !(_la==T__2 || _la==T__3) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -448,7 +446,7 @@ public class ChatGrammarParser extends Parser {
 			setState(63);
 			match(INT);
 			setState(64);
-			match(T__6);
+			match(T__4);
 			setState(65);
 			match(INT);
 			}
@@ -485,7 +483,7 @@ public class ChatGrammarParser extends Parser {
 			setState(67);
 			match(INT);
 			setState(68);
-			match(T__6);
+			match(T__4);
 			setState(69);
 			match(INT);
 			}
@@ -608,7 +606,7 @@ public class ChatGrammarParser extends Parser {
 			{
 			setState(77);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 2096896L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 65472L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -630,7 +628,7 @@ public class ChatGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0018P\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u0013P\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0001"+
@@ -644,7 +642,7 @@ public class ChatGrammarParser extends Parser {
 		"\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\b\u0001\b\u0001\t\u0001"+
 		"\t\u0001\n\u0001\n\u0001\u000b\u0001\u000b\u0001\u000b\u0000\u0000\f\u0000"+
 		"\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0000\u0002\u0001"+
-		"\u0000\u0003\u0006\u0001\u0000\b\u0014L\u0000\u0018\u0001\u0000\u0000"+
+		"\u0000\u0003\u0004\u0001\u0000\u0006\u000fL\u0000\u0018\u0001\u0000\u0000"+
 		"\u0000\u0002&\u0001\u0000\u0000\u0000\u00043\u0001\u0000\u0000\u0000\u0006"+
 		"5\u0001\u0000\u0000\u0000\b;\u0001\u0000\u0000\u0000\n=\u0001\u0000\u0000"+
 		"\u0000\f?\u0001\u0000\u0000\u0000\u000eC\u0001\u0000\u0000\u0000\u0010"+
@@ -656,7 +654,7 @@ public class ChatGrammarParser extends Parser {
 		"\u001f\u001e\u0001\u0000\u0000\u0000\u001f \u0001\u0000\u0000\u0000 !"+
 		"\u0001\u0000\u0000\u0000!#\u0003\u0014\n\u0000\"$\u0003\u0004\u0002\u0000"+
 		"#\"\u0001\u0000\u0000\u0000#$\u0001\u0000\u0000\u0000$\'\u0001\u0000\u0000"+
-		"\u0000%\'\u0005\u0015\u0000\u0000&\u001a\u0001\u0000\u0000\u0000&\u001d"+
+		"\u0000%\'\u0005\u0010\u0000\u0000&\u001a\u0001\u0000\u0000\u0000&\u001d"+
 		"\u0001\u0000\u0000\u0000&%\u0001\u0000\u0000\u0000\'\u0003\u0001\u0000"+
 		"\u0000\u0000(*\u0003\f\u0006\u0000)+\u0003\u000e\u0007\u0000*)\u0001\u0000"+
 		"\u0000\u0000*+\u0001\u0000\u0000\u0000+.\u0001\u0000\u0000\u0000,/\u0003"+
@@ -664,16 +662,16 @@ public class ChatGrammarParser extends Parser {
 		"\u0000\u0000\u0000/4\u0001\u0000\u0000\u000004\u0003\b\u0004\u000014\u0003"+
 		"\u0006\u0003\u000024\u0003\u0010\b\u00003(\u0001\u0000\u0000\u000030\u0001"+
 		"\u0000\u0000\u000031\u0001\u0000\u0000\u000032\u0001\u0000\u0000\u0000"+
-		"4\u0005\u0001\u0000\u0000\u000056\u0005\u0017\u0000\u000067\u0005\u0001"+
-		"\u0000\u000078\u0005\u0017\u0000\u000089\u0005\u0001\u0000\u00009:\u0005"+
-		"\u0017\u0000\u0000:\u0007\u0001\u0000\u0000\u0000;<\u0005\u0002\u0000"+
+		"4\u0005\u0001\u0000\u0000\u000056\u0005\u0012\u0000\u000067\u0005\u0001"+
+		"\u0000\u000078\u0005\u0012\u0000\u000089\u0005\u0001\u0000\u00009:\u0005"+
+		"\u0012\u0000\u0000:\u0007\u0001\u0000\u0000\u0000;<\u0005\u0002\u0000"+
 		"\u0000<\t\u0001\u0000\u0000\u0000=>\u0007\u0000\u0000\u0000>\u000b\u0001"+
-		"\u0000\u0000\u0000?@\u0005\u0017\u0000\u0000@A\u0005\u0007\u0000\u0000"+
-		"AB\u0005\u0017\u0000\u0000B\r\u0001\u0000\u0000\u0000CD\u0005\u0017\u0000"+
-		"\u0000DE\u0005\u0007\u0000\u0000EF\u0005\u0017\u0000\u0000F\u000f\u0001"+
-		"\u0000\u0000\u0000GH\u0005\u0017\u0000\u0000H\u0011\u0001\u0000\u0000"+
-		"\u0000IJ\u0005\u0017\u0000\u0000J\u0013\u0001\u0000\u0000\u0000KL\u0005"+
-		"\u0016\u0000\u0000L\u0015\u0001\u0000\u0000\u0000MN\u0007\u0001\u0000"+
+		"\u0000\u0000\u0000?@\u0005\u0012\u0000\u0000@A\u0005\u0005\u0000\u0000"+
+		"AB\u0005\u0012\u0000\u0000B\r\u0001\u0000\u0000\u0000CD\u0005\u0012\u0000"+
+		"\u0000DE\u0005\u0005\u0000\u0000EF\u0005\u0012\u0000\u0000F\u000f\u0001"+
+		"\u0000\u0000\u0000GH\u0005\u0012\u0000\u0000H\u0011\u0001\u0000\u0000"+
+		"\u0000IJ\u0005\u0012\u0000\u0000J\u0013\u0001\u0000\u0000\u0000KL\u0005"+
+		"\u0011\u0000\u0000L\u0015\u0001\u0000\u0000\u0000MN\u0007\u0001\u0000"+
 		"\u0000N\u0017\u0001\u0000\u0000\u0000\u0006\u001f#&*.3";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
