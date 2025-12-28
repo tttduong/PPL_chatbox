@@ -116,7 +116,6 @@ class GuidePanel(QWidget):
                 "Show both meetings and events:",
                 "• show calendar today",
                 "• check calendar 22/12/2025",
-                "• show pending calendar",
                 "• show pending calendar today",
                 "• check done calendar 22/12/2025",
             ]),
